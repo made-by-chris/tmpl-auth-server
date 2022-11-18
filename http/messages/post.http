@@ -1,0 +1,10 @@
+POST http://localhost:8080/messages
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWNlODE5OTM1ZTUzOWMzNDNmMTQxZWNlIiwiaWF0IjoxNjQ3NDYwODgxLCJleHAiOjE2NDc0NjI2ODF9.OTd-LjFvBjMv_CLcXQ__6j2qzVx6IqrBUFoH0iEN01Y
+Content-Type: application/json
+
+{
+    "from": "bob",
+    "to": "dave",
+    "message": "1010101000101101"
+}
+

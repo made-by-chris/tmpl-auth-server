@@ -1,0 +1,5 @@
+GET http://localhost:8080/loggedInPage
+
+###
+GET http://localhost:8080/loggedInPage
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3OTM4Nzk4MTI3MzM4OTEzMDAsImlhdCI6MTY0NzQ1NzY3OSwiZXhwIjoxNjQ3NDU5NDc5fQ.1dh5d9BulwMMyZ5lYsVNjFWGdnV8VosUXigXCCH2lCE

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>test form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+
+<body>
+  <ul></ul>
+  <form>
+    <input type="text" name="from" placeholder="from" />
+    <input type="text" name="to" placeholder="to" />
+    <input type="text" name="message" placeholder="message" />
+    <input type="submit" value="send" />
+  </form>
+</body>
+<script>
+  fetch("http://localhost:8080/messages")
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      data.forEach((message) => {
+        const li = document.createElement("li")
+        li.innerText = `${message.from} says ${message.message}`
+        document.querySelector("ul").appendChild(li)
+      })
+    })
+  document.querySelector("form").addEventListener("submit", (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const message = {
+      from: formData.get("from"),
+      to: formData.get("to"),
+      message: formData.get("message"),
+    }
+    fetch("http://localhost:8080/messages", {
+      method: "POST",
+      body: JSON.stringify(message),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        const li = document.createElement("li")
+        li.innerText = `${data.from} says ${data.message}`
+        document.querySelector("ul").appendChild(li)
+      })
+  })
+</script>
+
+</html>

@@ -1,0 +1,8 @@
+PUT http://localhost:8080/messages/6216756f71be11423b90c396
+Content-Type: application/json
+
+{
+    "from": "bob 2",
+    "to": "dave 2 ",
+    "message": "22222222"
+}
