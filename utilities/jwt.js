@@ -3,45 +3,29 @@ import jwt from  "jsonwebtoken"
 const generateToken = (data) =>
   jwt.sign(data, `${process.env.JWT_SECRET}`, { expiresIn: "604800s" })
 
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization
-
-  if (authHeader) {
-    const token = authHeader.split(" ")[1]
-
-    jwt.verify(token, `${process.env.JWT_SECRET}`, (err, user) => {
-      if (err) {
-        console.log(err)
-        return res.sendStatus(403)
-      }
-
-      req.user = user
-      next()
-    })
-  } else {
-    res.sendStatus(401)
-  }
-}
 
 const decodeToken = (req, res, next) => {
-  const authHeader = req.headers.authorization
-  try {
-    if (authHeader) {
-      const token = authHeader.split(" ")[1]
-      jwt.verify(token, `${process.env.JWT_SECRET}`, (err, token) => {
-        req.token = token
+  const token = req.cookies.token
+  if (token) {
+    jwt.verify(token, `${process.env.JWT_SECRET}`, (err, decoded) => {
+      if (err) {
+        res.clearCookie("token")
+        res.status(401).send({
+          message: "Invalid token",
+          success: false,
+          data: err,
+        })
+      } else {
+        req.token = decoded
         next()
-      })
-    } else {
-      next()
-    }
-  } catch (error) {
+      }
+    })
+  } else {
     next()
   }
 }
 
 export {
   generateToken,
-  verifyToken,
   decodeToken,
 }

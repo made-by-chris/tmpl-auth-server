@@ -2,7 +2,6 @@ import mongoose from  "mongoose"
 
 const MessageSchema = new mongoose.Schema(
   {
-    from: { required: true, type: String },
     to: { required: true, type: String },
     message: { required: true, type: String },
     user: {

@@ -1,6 +1,13 @@
 import User from  "../models/User"
 import * as jwt from  "../utilities/jwt"
 
+const cookieConfig = {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+      httpOnly: false,
+      secure: false,
+      sameSite: 'lax',
+}
+
 export const getAllUsers = async (req, res) => {
     const users = await User.find({})
     res.json(users)
@@ -8,11 +15,12 @@ export const getAllUsers = async (req, res) => {
 export const createUser = async (req, res) => { // create a new user
     try {
       const user = await User.create(req.body)
-      res.send({
-        message: "User created successfully",
-        data: user,
+      res
+      .cookie('token', jwt.generateToken({ id: user._id }), cookieConfig)
+      .send({
+        message: "User logged in successfully",
         success: true,
-        jwt: jwt.generateToken({ id: user._id }),
+        data: user,
       })
     } catch (error) {
       switch (error.code) {
@@ -37,8 +45,6 @@ export const createUser = async (req, res) => { // create a new user
 export const login = async (req, res) => {
   console.log(req.body.email, req.body.password)
   try {
-    // does a user with this email exist?
-    // if we re-encode the password they just sent to us.. does it match the one in the DB?
     User.authenticate(req.body.email, req.body.password, (error, user) => {
       if (error) {
         console.log(error)
@@ -49,11 +55,12 @@ export const login = async (req, res) => {
         })
       } else {
         console.log(req.body.email + " logged in successfully")
-        res.send({
-          message: "User logged-in successfully",
-          data: user,
+        res
+        .cookie('token', jwt.generateToken({ id: user._id }), cookieConfig)
+        .send({
+          message: "User logged in successfully",
           success: true,
-          jwt: jwt.generateToken({ id: user._id }),
+          data: user,
         })
       }
     })
@@ -70,8 +77,19 @@ export const login = async (req, res) => {
   }
 }
 
+export const logout = async (req, res) => {
+  res.clearCookie('token')
+  res.send({
+    message: "User logged out successfully",
+    success: true,
+    data: null,
+  })
+}
+
+
 export const me = async (req, res) => {
-  if (req.token.id) {
+  if (req.token?.id) {
+    console.log(req.token.id, "is logged in")
     try {
       const user = await User.findById(req.token.id)
       if (!user) {

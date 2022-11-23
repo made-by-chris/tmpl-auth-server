@@ -4,10 +4,8 @@ import {
   getAllUsers,
   createUser,
   login,
-  me,
-  getUser,
-  updateUser,
-  deleteUser 
+  logout,
+  me
 } from "../controllers/User"
 
 router
@@ -15,9 +13,9 @@ router
   .get(getAllUsers)
   .post(createUser)
 
-router.route("/login").post(login)
-
+router.post("/login", login)
 router.get("/me", me)
+router.get("/logout", logout)
 
 
 export default router
